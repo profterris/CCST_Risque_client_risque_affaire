@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BTS CCST – Valeur client, risque client et risque affaire</title>
+<style>
+/* ── RESET & BASE ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #f5f6fa;
+  --surface:   #ffffff;
+  --card:      #ffffff;
+  --border:    #e1e4ed;
+  --border-hi: #c5cbdc;
+  --text:      #1f2433;
+  --text-dim:  #636a80;
+  --accent:    #e0a300;
+  --green:     #1e9a4b;
+  --red:       #d03b3b;
+  --blue:      #2f7fc9;
+  --purple:    #7a4fc0;
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --radius:    10px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── HEADER ──────────────────────────────────────────────── */
+.site-header {
+  background: linear-gradient(135deg, #ffffff 0%, #eaeef8 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 48px 24px 36px;
+  text-align: center;
+}
+.site-header .kicker {
+  display: inline-block;
+  background: var(--accent);
+  color: #1f2433;
+  font-family: var(--font-head);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 3px;
+  margin-bottom: 18px;
+}
+.site-header h1 {
+  font-family: var(--font-head);
+  font-size: clamp(22px, 5vw, 38px);
+  font-weight: 800;
+  color: #141826;
+  margin-bottom: 8px;
+  line-height: 1.15;
+}
+.site-header .sub {
+  color: var(--text-dim);
+  font-size: 14px;
+  font-weight: 300;
+  max-width: 560px;
+  margin: 0 auto 24px;
+}
+
+/* ── NAV ANCRES ──────────────────────────────────────────── */
+.nav-anchors {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.nav-anchors a {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 16px;
+  text-decoration: none;
+  transition: border-color .15s, color .15s;
+}
+.nav-anchors a:hover { border-color: var(--accent); color: #a87400; }
+
+/* ── CONTENEUR PRINCIPAL ─────────────────────────────────── */
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* ── TITRE DE BLOC ───────────────────────────────────────── */
+.bloc-titre {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 52px 0 6px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.bloc-titre:first-child { margin-top: 0; }
+.bloc-titre .icone {
+  font-size: 26px;
+  flex-shrink: 0;
+}
+.bloc-titre h2 {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 800;
+  color: #141826;
+}
+
+/* ── MÉMO FORMULE ────────────────────────────────────────── */
+.memo {
+  background: #eefaf2;
+  border: 1px solid #cdeeda;
+  border-left: 4px solid var(--green);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  font-size: 13.5px;
+  line-height: 1.75;
+}
+.memo .memo-titre {
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+.memo code {
+  display: block;
+  background: #def3e6;
+  border-radius: 5px;
+  padding: 8px 14px;
+  color: #145c33;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  margin: 4px 0;
+}
+.memo .note {
+  color: var(--text-dim);
+  font-size: 12.5px;
+  margin-top: 6px;
+}
+
+/* ── CARTE EXERCICE ──────────────────────────────────────── */
+.exo-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+  overflow: hidden;
+  transition: border-color .15s;
+}
+.exo-card:hover { border-color: var(--border-hi); }
+
+.exo-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+.exo-header::-webkit-details-marker { display: none; }
+
+.exo-num {
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  min-width: 40px;
+}
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 9px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.badge-1 { background: #e5f6eb; color: var(--green); border: 1px solid #bde4cb; }
+.badge-2 { background: #fff5d9; color: #a87400; border: 1px solid #efd998; }
+.badge-3 { background: #fdeaea; color: var(--red); border: 1px solid #f2c2c2; }
+.badge-exam { background: #f1eafb; color: var(--purple); border: 1px solid #d9c8f2; }
+
+.exo-titre-txt {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  flex: 1;
+}
+.chevron {
+  color: var(--text-dim);
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: transform .2s;
+}
+details[open] .chevron { transform: rotate(180deg); }
+
+/* ── CORPS DE L'EXERCICE ─────────────────────────────────── */
+.exo-body {
+  padding: 0 18px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.contexte {
+  background: #f0f5fc;
+  border-left: 3px solid var(--blue);
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.75;
+}
+.contexte strong { color: #141826; }
+
+.tableau-donnees {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 12px 0;
+}
+.tableau-donnees th {
+  background: #eef1f7;
+  color: var(--text-dim);
+  font-family: var(--font-head);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.tableau-donnees td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+.tableau-donnees tr:last-child td { border-bottom: none; }
+.tableau-donnees td.num { font-weight: 600; color: #141826; }
+.tableau-donnees tr.total-row td {
+  background: #eef1f7;
+  font-family: var(--font-head);
+  font-weight: 700;
+  color: #a87400;
+}
+.table-scroll { overflow-x: auto; }
+
+.questions { margin: 18px 0 0; }
+.question {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: flex-start;
+}
+.question .q-num {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  background: var(--accent);
+  color: #1f2433;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 11px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+.question p { font-size: 14px; margin: 0; }
+
+/* ── ORDRE DE GRANDEUR ───────────────────────────────────── */
+.ordre-grandeur {
+  background: #fff8e0;
+  border: 1px solid #efdc9c;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 12.5px;
+  color: #6f5400;
+  margin: 12px 0 0;
+}
+.ordre-grandeur::before { content: "💡 "; }
+
+/* ── BOUTON CORRECTION ───────────────────────────────────── */
+.btn-corrige {
+  background: none;
+  border: 1px solid var(--border-hi);
+  border-radius: 6px;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  margin-top: 18px;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-corrige:hover { border-color: var(--green); color: var(--green); }
+
+/* ── CORRECTION ──────────────────────────────────────────── */
+.correction {
+  display: none;
+  background: #f0faf3;
+  border: 1px solid #cdeeda;
+  border-radius: 6px;
+  padding: 16px 18px;
+  margin-top: 14px;
+  font-size: 13.5px;
+  line-height: 1.8;
+}
+.correction.visible { display: block; }
+.correction .corr-etape {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #d6ecdd;
+}
+.correction .corr-etape:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.correction .c-num {
+  display: inline-block;
+  background: var(--green);
+  color: #ffffff;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 18px;
+  margin-right: 6px;
+}
+.correction code {
+  display: block;
+  background: #def3e6;
+  border-radius: 4px;
+  padding: 6px 12px;
+  color: #145c33;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  margin: 5px 0;
+}
+.correction .res {
+  font-family: var(--font-head);
+  font-weight: 700;
+  color: #141826;
+}
+.correction .conclu {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #2c6a44;
+  font-style: italic;
+}
+.correction .tableau-corr {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  margin: 8px 0;
+}
+.correction .tableau-corr th {
+  background: #e1f2e7;
+  color: var(--text-dim);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  text-align: left;
+}
+.correction .tableau-corr td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #d6ecdd;
+  color: #2b4535;
+  vertical-align: top;
+}
+.correction .tableau-corr td.val {
+  font-weight: 700;
+  color: var(--green);
+}
+.correction .tableau-corr tr.t-total td {
+  background: #e1f2e7;
+  font-weight: 700;
+  color: #a87400;
+}
+.correction ul { margin: 4px 0 4px 20px; }
+
+/* ── MATRICE VALEUR / RISQUE ─────────────────────────────── */
+.matrice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 10px 0 4px;
+}
+.matrice .mq {
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  border: 1px solid var(--border);
+}
+.matrice .mq strong { display: block; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.matrice .mq-1 { background: #fff3e6; }
+.matrice .mq-2 { background: #fdeaea; }
+.matrice .mq-3 { background: #eef1f7; }
+.matrice .mq-4 { background: #e5f6eb; }
+.matrice-axes { font-size: 11.5px; color: var(--text-dim); text-align: center; margin-bottom: 6px; }
+
+/* ── SÉPARATEUR ──────────────────────────────────────────── */
+hr.section-sep {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 54px 0 0;
+}
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 20px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 520px) {
+  .exo-titre-txt { font-size: 13px; }
+  .contexte { font-size: 13px; }
+  .tableau-donnees { font-size: 12px; }
+  .matrice { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="kicker">📊 BTS CCST – bloc 1 / épreuve E5</div>
+  <h1>Valeur client, risque client<br>et risque affaire</h1>
+  <p class="sub">16 exercices progressifs autour du dossier Luminotech Solutions – de l'analyse d'un client à la négociation sécurisée d'une affaire</p>
+  <nav class="nav-anchors">
+    <a href="#identifier">🔍 Identifier (6 ex.)</a>
+    <a href="#mesurer">📈 Mesurer et classer (5 ex.)</a>
+    <a href="#decider">🤝 Décider et négocier (5 ex.)</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 1 – IDENTIFIER
+══════════════════════════════════════════════════════════ -->
+<div class="bloc-titre" id="identifier">
+  <span class="icone">🔍</span>
+  <h2>Bloc 1 – Identifier valeur client, risque client et risque affaire</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo définitions</div>
+  <code>Valeur client = ce que le client apporte aujourd'hui et demain : CA, marge, volume, potentiel, image, durée de la relation</code>
+  <code>Risque client = probabilité que le client ne paie pas ou paie en retard (solvabilité, comportement de paiement)</code>
+  <code>Risque affaire = risque propre à une opération donnée : montant, complexité technique, délais, clauses, image</code>
+  <p class="note">Une décision commerciale se prend toujours en regardant <strong>les trois ensemble</strong>, et pas seulement le chiffre d'affaires ou la marge.</p>
+</div>
+
+<div class="contexte">
+  <strong>Dossier Luminotech Solutions</strong> – PME de 25 salariés (agglomération de Lyon), distribution de solutions d'éclairage LED et de pilotage intelligent pour bâtiments professionnels. Clientèle exclusivement BtoB : installateurs, intégrateurs, gestionnaires de parcs tertiaires, collectivités.<br><br>
+  • CA N-1 : <strong>2 800 000 € HT</strong> – 120 clients actifs – top 10 = 55 % du CA<br>
+  • Conditions standard : 30 jours fin de mois, parfois 45 jours fin de mois pour les grands comptes<br>
+  • Depuis 18 mois : hausse des retards de paiement, tensions de trésorerie (coût d'achat en hausse, délais fournisseurs plus courts)<br><br>
+  La direction demande à l'équipe technico-commerciale d'analyser la valeur et le risque de certains clients avant de s'engager sur de nouvelles affaires complexes et à fort montant.
+</div>
+
+<!-- EX 1 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 1</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Trier les indices – valeur, risque client, risque affaire ou opportunité ?</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Voici 8 informations relevées dans les fiches clients de Luminotech :<br><br>
+      a. Délai de paiement réel de 78 jours pour un délai contractuel de 30 jours fin de mois<br>
+      b. 110 commandes par an, panier moyen de 5 000 € HT<br>
+      c. Luminaires sur mesure, difficilement revendables à un autre client<br>
+      d. Logos de Luminotech présents dans des dossiers de presse<br>
+      e. Mise en demeure envoyée l'année dernière<br>
+      f. Pénalités de retard dans le contrat du client, répercutables sur Luminotech<br>
+      g. Relation de 7 ans, client capable de référencer Luminotech sur des appels d'offres<br>
+      h. Nombreux contrats cadres gagnés récemment par le client
+    </div>
+    <div class="questions">
+      <div class="question">
+        <span class="q-num">1</span>
+        <p>Classez chaque information dans l'une des 4 catégories : valeur client, risque client, risque affaire, opportunité.</p>
+      </div>
+      <div class="question">
+        <span class="q-num">2</span>
+        <p>Expliquez en une phrase la différence entre risque client et risque affaire.</p>
+      </div>
+    </div>
+    <div class="ordre-grandeur"><strong>Indice :</strong> le risque client parle du <em>payeur</em>, le risque affaire parle de <em>l'opération</em>. Une même information peut parfois se discuter : l'essentiel est de justifier.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Catégorie</th><th>Informations</th></tr></thead>
+          <tbody>
+            <tr><td>Valeur client</td><td class="val">b, g</td></tr>
+            <tr><td>Risque client</td><td class="val">a, e</td></tr>
+            <tr><td>Risque affaire</td><td class="val">c, f</td></tr>
+            <tr><td>Opportunité</td><td class="val">d, h</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <p class="res">Le risque client porte sur la capacité et la volonté du client à payer ; le risque affaire porte sur les caractéristiques de l'opération elle-même (montant, technique, délais, clauses).</p>
+        <p class="conclu">Un client très bon payeur peut porter une affaire très risquée (voir Lumière & Design et l'hôtel « Le Bel Horizon »).</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 2 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 2</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Fiche client A – Elektromax Energie</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      <strong>Elektromax Energie</strong> – groupement régional d'installateurs électriciens (15 agences, Auvergne-Rhône-Alpes), client depuis 7 ans.<br><br>
+      • CA N-1 avec Luminotech : <strong>560 000 € HT</strong>, soit <strong>20 %</strong> du CA total<br>
+      • Environ 110 commandes / an, panier moyen 5 000 € HT – marge correcte mais en baisse, forte pression sur les prix<br>
+      • Délai contractuel : <strong>45 jours fin de mois</strong> – délai réel : <strong>62 jours</strong> (15 à 20 jours après l'échéance)<br>
+      • 3 factures importantes payées avec plus de 30 jours de retard ; un incident il y a 8 mois (facture de 38 000 € réglée après relance écrite et appel)<br>
+      • Acteur reconnu, capable de référencer Luminotech sur des appels d'offres ; potentiel en progression (rénovation énergétique financée par les CEE)<br>
+      • Litiges passés : délais de livraison sur chantiers urgents (réglés à l'amiable), série de drivers défectueux (traitée sous garantie)<br>
+      • Exige des remises élevées et essaie d'allonger les délais de paiement
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Relevez les éléments de valeur client.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Relevez les éléments de risque client.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Quels risques affaire apparaîtraient si Luminotech signait une nouvelle grosse affaire avec ce client ? Quelles opportunités ?</p></div>
+      <div class="question"><span class="q-num">4</span><p>Qualifiez valeur client, risque client et risque affaire (faible / moyen / fort).</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Indice :</strong> comparez le délai réel au délai contractuel, puis demandez-vous ce qui se passerait pour la trésorerie si 20 % du CA était payé en retard.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span> <strong>Valeur :</strong> 560 000 € de CA (20 %), environ 110 commandes / an, groupement de 15 agences, potentiel en rénovation énergétique, client capable de référencer Luminotech sur de gros chantiers.</div>
+      <div class="corr-etape"><span class="c-num">2</span> <strong>Risque client :</strong> 62 jours réels pour 45 contractuels, soit 15 à 20 jours de retard systématique ; 3 factures à plus de 30 jours de retard ; incident sur 38 000 € ; pression sur remises et délais ; concentration du risque (20 % du CA sur un seul client).</div>
+      <div class="corr-etape"><span class="c-num">3</span> <strong>Risque affaire :</strong> l'encours augmente fortement sur un client habitué aux retards, tension de trésorerie possible, risques logistiques et techniques déjà constatés.<br><strong>Opportunités :</strong> volumes en croissance, effet « client vitrine » auprès d'autres installateurs, référencement sur de nombreux chantiers tertiaires.</div>
+      <div class="corr-etape">
+        <span class="c-num">4</span>
+        <p class="res">Valeur forte – risque client moyen à élevé – risque affaire moyen</p>
+        <p class="conclu">Le risque financier est réel, mais le client reste solide et stratégique.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 3 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 3</span>
+    <span class="badge badge-2">⬆⬆ intermédiaire</span>
+    <span class="exo-titre-txt">Fiche client B – Technibat Services</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      <strong>Technibat Services</strong> – maintenance multitechnique de bâtiments tertiaires (sud-est), client depuis 3 ans.<br><br>
+      • CA N-1 : <strong>280 000 € HT</strong> (10 % du CA), <strong>+60 %</strong> en 3 ans – environ 70 commandes / an, panier moyen 4 000 € HT<br>
+      • Délai contractuel : <strong>30 jours fin de mois</strong> – délai réel : <strong>78 jours</strong>, relances systématiques<br>
+      • Deux factures de plus de 25 000 € réglées avec plus de 60 jours de retard ; une mise en demeure l'an dernier<br>
+      • Bien implanté sur les marchés publics de rénovation énergétique ; perçu comme « bon technicien mais mauvais payeur »<br>
+      • Fort potentiel (nombreux contrats cadres gagnés) ; responsable technique très satisfait<br>
+      • Tension de trésorerie déclarée par le client ; dépendance à quelques gros contrats publics<br>
+      • Contestation de petites lignes de factures, demandes récurrentes de gestes commerciaux
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez l'écart entre le délai réel et le délai contractuel (en jours, en prenant 30 jours comme base).</p></div>
+      <div class="question"><span class="q-num">2</span><p>Classez les informations en valeur client / risque client / risque affaire / opportunités.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Qualifiez les trois niveaux et formulez la conclusion pour la suite de la relation.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Indice :</strong> un client qui paie à 78 jours au lieu de 30 fait « financer » plus d'un mois et demi de son activité par son fournisseur.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>78 − 30 = 48 jours de retard moyen (environ 2 mois et demi de délai réel)</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Catégorie</th><th>Éléments</th></tr></thead>
+          <tbody>
+            <tr><td>Valeur client</td><td>280 000 € (10 %), +60 % en 3 ans, 70 commandes / an, bonne image technique</td></tr>
+            <tr><td>Risque client</td><td>78 jours réels, retards &gt; 60 jours, mise en demeure, trésorerie tendue, réputation de mauvais payeur, dépendance à quelques contrats</td></tr>
+            <tr><td>Risque affaire</td><td>encours déjà élevé, échéancier probablement non respecté, pénalités de contrats de performance énergétique répercutables</td></tr>
+            <tr><td>Opportunités</td><td>gros volumes à court et moyen terme, partenaire privilégié sur grands projets, marchés publics récurrents</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <p class="res">Valeur forte – risque client élevé – risque affaire élevé</p>
+        <p class="conclu">Toute nouvelle affaire doit être très fortement sécurisée, voire limitée dans son montant.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 4 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 4</span>
+    <span class="badge badge-2">⬆⬆ intermédiaire</span>
+    <span class="exo-titre-txt">Fiche client C – Lumière & Design</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      <strong>Lumière & Design</strong> – bureau d'études et intégrateur en éclairage architectural (hôtels, restaurants, boutiques haut de gamme – Lyon, Grenoble, Annecy), client depuis 5 ans.<br><br>
+      • CA N-1 : <strong>84 000 € HT</strong> (3 % du CA), +5 % par an – environ 25 commandes / an, panier moyen 3 300 € HT<br>
+      • Délai contractuel : <strong>30 jours fin de mois</strong> – délai réel : <strong>28 jours</strong>, souvent paiement anticipé<br>
+      • Aucun retard supérieur à 10 jours sur 12 mois, aucun incident de paiement<br>
+      • Excellente image dans l'hôtellerie-restauration design, projets très visibles (logos Luminotech dans des dossiers presse)<br>
+      • Co-construction de solutions sur mesure ; quelques retours produits (température de couleur, intensité)<br>
+      • Produits spécifiques difficilement revendables ; forte sensibilité esthétique
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Pourquoi ce client, qui ne pèse que 3 % du CA, peut-il avoir une valeur importante pour Luminotech ?</p></div>
+      <div class="question"><span class="q-num">2</span><p>Où se situe le risque principal avec ce client : côté client ou côté affaire ? Justifiez.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Qualifiez les trois niveaux.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Indice :</strong> la valeur d'un client ne se résume pas à son CA – pensez « prescripteur » et « vitrine ».</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span> Activité régulière, bonne marge, rôle de <strong>prescripteur</strong> auprès d'hôtels et boutiques de prestige, <strong>effet vitrine</strong> (presse, communication des établissements), consolidation de l'image de Luminotech sur le haut de gamme.</div>
+      <div class="corr-etape"><span class="c-num">2</span> Le risque est <strong>côté affaire</strong> : paiements exemplaires, mais projets très personnalisés, modifications coûteuses possibles, produits difficilement revendables, risque d'image si le rendu déçoit sur un projet très visible.</div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <p class="res">Valeur moyenne en volume mais forte en image – risque client faible – risque affaire moyen</p>
+        <p class="conclu">Le risque est surtout technique et d'image, lié à la personnalisation.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 5 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 5</span>
+    <span class="badge badge-2">⬆⬆ intermédiaire</span>
+    <span class="exo-titre-txt">Article de presse – quand les impayés font tomber les PME</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      <em>« Les retards de paiement restent l'une des premières causes de défaillance des petites et moyennes entreprises. […] Plus d'une défaillance de PME sur quatre est directement liée à des impayés ou à des retards de règlement répétés. Les délais contractuels tournent encore autour de 30 à 45 jours, mais dans la réalité, de nombreuses entreprises se retrouvent payées à 60, 75 voire 90 jours. »</em><br><br>
+      <em>« Le problème, ce n'est pas seulement le montant d'une facture, c'est l'effet cumulatif : quand plusieurs gros clients payent en retard, la trésorerie se retrouve asphyxiée. »</em><br><br>
+      L'article cite ensuite les grands donneurs d'ordre qui imposent leurs conditions, les clients en difficulté financière, puis les outils de prévention : suivi des délais réels, plafonds d'encours, vérification de solvabilité, assurance-crédit, affacturage.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Quelles sont les deux grandes origines des impayés citées par l'article ?</p></div>
+      <div class="question"><span class="q-num">2</span><p>Pourquoi une entreprise rentable peut-elle déposer le bilan ?</p></div>
+      <div class="question"><span class="q-num">3</span><p>Listez les outils de prévention et les recommandations minimales. Lesquels s'appliqueraient à Technibat Services ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Indice :</strong> distinguez « rentabilité » (marge) et « trésorerie » (argent réellement encaissé).</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape"><span class="c-num">1</span> Les <strong>grands donneurs d'ordre</strong> qui imposent leurs délais grâce à leur pouvoir de négociation ; les <strong>clients en difficulté financière</strong> (perte d'un contrat, mauvaise gestion, baisse d'activité, redressement ou liquidation).</div>
+      <div class="corr-etape"><span class="c-num">2</span> Parce qu'elle doit continuer à payer salaires, loyers et fournisseurs sans encaisser à temps : la marge existe sur le papier, mais la trésorerie manque.</div>
+      <div class="corr-etape">
+        <span class="c-num">3</span> <strong>Outils :</strong> suivi régulier des délais réels par client, plafonds d'encours, vérification de solvabilité, assurance-crédit, affacturage.<br><strong>Recommandations minimales :</strong> surveiller le comportement de paiement, réagir vite en cas de dérive (relances, mise en demeure, blocage temporaire des livraisons), intégrer risque client et risque affaire dans la décision commerciale.
+        <p class="conclu">Pour Technibat : plafond d'encours, suivi serré des délais, blocage des livraisons en cas de dérive, étude d'une assurance-crédit.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 6 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 6</span>
+    <span class="badge badge-3">⬆⬆⬆ avancé</span>
+    <span class="exo-titre-txt">Associer chaque situation au bon outil de sécurisation</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      <strong>Outils disponibles :</strong> analyse de crédit préalable – termes de paiement clairs (acompte, échéancier) – garanties ou assurances de paiement (caution, lettre de crédit, assurance-crédit) – diversification du portefeuille – escompte pour paiement anticipé – clauses contractuelles de protection (intérêts de retard, pénalités, réserve de propriété) – suivi et communication réguliers.<br><br>
+      <strong>Situations :</strong><br>
+      a. Un nouveau prospect demande 60 jours de délai pour une première commande de 45 000 €.<br>
+      b. Le top 10 des clients représente 55 % du CA de Luminotech.<br>
+      c. Un bon client paie toujours à l'échéance exacte, mais Luminotech manque de trésorerie.<br>
+      d. Luminotech doit acheter 120 000 € de luminaires spécifiques pour un projet sur mesure.<br>
+      e. Un client accumule de petits retards depuis 3 mois sans incident grave.<br>
+      f. Luminotech veut pouvoir récupérer le matériel livré si le client ne paie pas.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Associez à chaque situation l'outil le plus adapté et justifiez en une phrase.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Indice :</strong> un outil agit soit <em>avant</em> la vente (prévenir), soit <em>pendant</em> (sécuriser), soit <em>après</em> (suivre et recouvrer).</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Situation</th><th>Outil</th><th>Justification</th></tr></thead>
+          <tbody>
+            <tr><td>a</td><td class="val">Analyse de crédit préalable</td><td>aucun historique : vérifier la solvabilité avant de fixer les conditions</td></tr>
+            <tr><td>b</td><td class="val">Diversification</td><td>réduire la dépendance à quelques gros comptes</td></tr>
+            <tr><td>c</td><td class="val">Escompte pour paiement anticipé</td><td>inciter un client fiable à payer plus tôt</td></tr>
+            <tr><td>d</td><td class="val">Acompte / échéancier</td><td>faire financer les achats spécifiques avant de les engager</td></tr>
+            <tr><td>e</td><td class="val">Suivi et communication</td><td>détecter la dérive avant qu'elle ne devienne un impayé</td></tr>
+            <tr><td>f</td><td class="val">Clause de réserve de propriété</td><td>Luminotech reste propriétaire jusqu'au paiement complet</td></tr>
+          </tbody>
+        </table>
+        <p class="conclu">Plusieurs réponses sont recevables si l'argumentation est cohérente (ex. : assurance-crédit pour la situation a).</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<hr class="section-sep">
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 2 – MESURER ET CLASSER
+══════════════════════════════════════════════════════════ -->
+<div class="bloc-titre" id="mesurer" style="margin-top:40px">
+  <span class="icone">📈</span>
+  <h2>Bloc 2 – Mesurer la valeur et le risque, classer le portefeuille</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo formules</div>
+  <code>Part de CA (%) = CA client ÷ CA total × 100</code>
+  <code>Marge totale annuelle = marge unitaire moyenne × quantités vendues</code>
+  <code>Taux de marge (%) ≈ marge totale ÷ CA client × 100</code>
+  <code>Taux d'impayés (%) ≈ nb factures impayées ÷ nb commandes × 100</code>
+  <p class="note">Dans ce dossier, le « taux de marge » est rapporté au CA (au sens comptable strict, c'est un taux de marque). Arrondir à 0,1 %.</p>
+</div>
+
+<div class="contexte">
+  <strong>Portefeuille simplifié de 6 clients – année N-1</strong> (jeu de données d'entraînement, distinct du dossier du bloc 1). CA total de l'entreprise : <strong>1 200 000 € HT</strong>.
+  <div class="table-scroll">
+  <table class="tableau-donnees">
+    <thead><tr><th>Client</th><th>CA N-1 HT</th><th>Qtés</th><th>Marge unit.</th><th>Encours moy.</th><th>Délai réel</th><th>Retard moy.</th><th>Impayés &gt; 60 j</th><th>Cdes / an</th></tr></thead>
+    <tbody>
+      <tr><td>A – Elektromax Energie</td><td class="num">360 000 €</td><td>1 200</td><td>90 €</td><td>95 000 €</td><td>62 j</td><td>18 j</td><td>2</td><td>80</td></tr>
+      <tr><td>B – Technibat Services</td><td class="num">240 000 €</td><td>900</td><td>80 €</td><td>110 000 €</td><td>78 j</td><td>32 j</td><td>3</td><td>65</td></tr>
+      <tr><td>C – Lumière & Design</td><td class="num">84 000 €</td><td>280</td><td>95 €</td><td>18 000 €</td><td>28 j</td><td>3 j</td><td>0</td><td>25</td></tr>
+      <tr><td>D – Retail City Group</td><td class="num">210 000 €</td><td>700</td><td>75 €</td><td>70 000 €</td><td>52 j</td><td>12 j</td><td>1</td><td>40</td></tr>
+      <tr><td>E – Public Works Régie</td><td class="num">156 000 €</td><td>520</td><td>70 €</td><td>35 000 €</td><td>45 j</td><td>8 j</td><td>0</td><td>30</td></tr>
+      <tr><td>F – Green Office Park</td><td class="num">150 000 €</td><td>500</td><td>72 €</td><td>55 000 €</td><td>60 j</td><td>20 j</td><td>1</td><td>32</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- EX 7 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 7</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Part de chaque client dans le CA total</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez la part de CA de chacun des 6 clients.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Quelle part du CA représentent les deux premiers clients ensemble ? Qu'en concluez-vous ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> 120 000 € = 10 % du CA total. Le client A, trois fois plus gros, pèse donc autour de 30 %. La somme des 6 parts doit faire 100 %.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Client</th><th>Calcul</th><th>Part de CA</th></tr></thead>
+          <tbody>
+            <tr><td>A</td><td>360 000 ÷ 1 200 000</td><td class="val">30 %</td></tr>
+            <tr><td>B</td><td>240 000 ÷ 1 200 000</td><td class="val">20 %</td></tr>
+            <tr><td>C</td><td>84 000 ÷ 1 200 000</td><td class="val">7 %</td></tr>
+            <tr><td>D</td><td>210 000 ÷ 1 200 000</td><td class="val">17,5 %</td></tr>
+            <tr><td>E</td><td>156 000 ÷ 1 200 000</td><td class="val">13 %</td></tr>
+            <tr><td>F</td><td>150 000 ÷ 1 200 000</td><td class="val">12,5 %</td></tr>
+            <tr class="t-total"><td colspan="2">Total</td><td class="val">100 %</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>30 + 20 = 50 %</code>
+        <p class="res">La moitié du CA repose sur 2 clients, qui sont aussi ceux qui paient le plus tard.</p>
+        <p class="conclu">Forte concentration du risque : une défaillance de A ou B mettrait l'entreprise en danger.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 8 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 8</span>
+    <span class="badge badge-1">⬆ décollage</span>
+    <span class="exo-titre-txt">Marge totale annuelle et taux de marge</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez la marge totale annuelle de chaque client.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Calculez le taux de marge de chaque client. Quel client est le plus rentable en taux ? En valeur absolue ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> les taux se situent tous entre 20 % et 35 %. Un résultat à 3 % ou 300 % signale une erreur de virgule.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Client</th><th>Marge totale</th><th>Taux de marge</th></tr></thead>
+          <tbody>
+            <tr><td>A</td><td>90 × 1 200 = <strong>108 000 €</strong></td><td class="val">108 000 ÷ 360 000 = 30 %</td></tr>
+            <tr><td>B</td><td>80 × 900 = <strong>72 000 €</strong></td><td class="val">72 000 ÷ 240 000 = 30 %</td></tr>
+            <tr><td>C</td><td>95 × 280 = <strong>26 600 €</strong></td><td class="val">26 600 ÷ 84 000 ≈ 31,7 %</td></tr>
+            <tr><td>D</td><td>75 × 700 = <strong>52 500 €</strong></td><td class="val">52 500 ÷ 210 000 = 25 %</td></tr>
+            <tr><td>E</td><td>70 × 520 = <strong>36 400 €</strong></td><td class="val">36 400 ÷ 156 000 ≈ 23,3 %</td></tr>
+            <tr><td>F</td><td>72 × 500 = <strong>36 000 €</strong></td><td class="val">36 000 ÷ 150 000 = 24 %</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <p class="res">Meilleur taux : C (31,7 %) – meilleure marge en valeur : A (108 000 €)</p>
+        <p class="conclu">Un petit client peut être très rentable en taux ; un gros client apporte la masse de marge.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 9 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 9</span>
+    <span class="badge badge-2">⬆⬆ intermédiaire</span>
+    <span class="exo-titre-txt">Taux d'impayés et comportement de paiement</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez le taux d'impayés approximatif de chaque client.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Classez les clients du plus risqué au moins risqué en croisant délai réel, retard moyen, encours et taux d'impayés.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> 1 impayé sur 40 commandes = 2,5 %. Aucun client ne dépasse 5 %.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Client</th><th>Calcul</th><th>Taux d'impayés</th></tr></thead>
+          <tbody>
+            <tr><td>A</td><td>2 ÷ 80</td><td class="val">2,5 %</td></tr>
+            <tr><td>B</td><td>3 ÷ 65</td><td class="val">≈ 4,6 %</td></tr>
+            <tr><td>C</td><td>0 ÷ 25</td><td class="val">0 %</td></tr>
+            <tr><td>D</td><td>1 ÷ 40</td><td class="val">2,5 %</td></tr>
+            <tr><td>E</td><td>0 ÷ 30</td><td class="val">0 %</td></tr>
+            <tr><td>F</td><td>1 ÷ 32</td><td class="val">≈ 3,1 %</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <p class="res">B › A › F › D › E › C</p>
+        <p class="conclu">B cumule le délai le plus long (78 j), le plus gros encours (110 000 €) et le taux d'impayés le plus élevé. A et F sont proches ; d'autres ordres sont acceptables s'ils sont justifiés.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 10 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 10</span>
+    <span class="badge badge-2">⬆⬆ intermédiaire</span>
+    <span class="exo-titre-txt">Qualifier la valeur et le risque de chaque client</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>À partir des exercices 7 à 9, qualifiez pour chaque client le niveau de valeur (faible / moyen / fort) et le niveau de risque client (faible / moyen / élevé).</p></div>
+      <div class="question"><span class="q-num">2</span><p>Justifiez chaque qualification par au moins deux indicateurs.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Indice :</strong> pour la valeur, regardez part de CA + marge + fréquence ; pour le risque, délai réel + encours + impayés.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Client</th><th>Valeur</th><th>Risque</th><th>Justification</th></tr></thead>
+          <tbody>
+            <tr><td>A</td><td class="val">forte</td><td class="val">moyen (à élevé)</td><td>30 % du CA, 108 000 € de marge ; 62 j, 95 000 € d'encours, 2,5 % d'impayés</td></tr>
+            <tr><td>B</td><td class="val">forte</td><td class="val">élevé</td><td>20 % du CA, 30 % de marge, potentiel ; 78 j, 110 000 € d'encours, 4,6 % d'impayés</td></tr>
+            <tr><td>C</td><td class="val">moyenne</td><td class="val">faible</td><td>7 % du CA mais 31,7 % de marge, image ; 28 j, encours limité, 0 impayé</td></tr>
+            <tr><td>D</td><td class="val">forte</td><td class="val">moyen (proche faible)</td><td>17,5 % du CA, 25 % de marge ; 52 j, 70 000 € d'encours, peu d'incidents</td></tr>
+            <tr><td>E</td><td class="val">moyenne</td><td class="val">faible</td><td>13 % du CA, 23,3 % de marge ; 45 j, encours modéré, 0 impayé</td></tr>
+            <tr><td>F</td><td class="val">moyenne</td><td class="val">moyen</td><td>12,5 % du CA, 24 % de marge ; 60 j, 55 000 € d'encours, 3,1 % d'impayés</td></tr>
+          </tbody>
+        </table>
+        <p class="conclu">Plusieurs qualifications sont acceptables dès lors que l'argumentation est cohérente avec les chiffres.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 11 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 11</span>
+    <span class="badge badge-3">⬆⬆⬆ avancé</span>
+    <span class="exo-titre-txt">Matrice valeur / risque et décisions commerciales</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      Construisez une matrice 2 × 2 :<br>
+      • axe horizontal : valeur client (faible → forte)<br>
+      • axe vertical : risque client (faible → élevé)<br><br>
+      Placez les clients A à F et notez dans chaque case une décision commerciale possible (conditions de paiement, garanties, niveau de remise, priorité).
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Positionnez les 6 clients dans la matrice.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Pour chaque case, proposez une stratégie commerciale.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Quels clients prioriser ? Où placez-vous le curseur « accepter / refuser une affaire » ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Indice :</strong> forte valeur + risque élevé ne veut pas dire « refuser » mais « sécuriser ».</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <p class="matrice-axes">↑ risque élevé &nbsp;|&nbsp; valeur forte →</p>
+        <div class="matrice">
+          <div class="mq mq-1"><strong>Valeur moyenne / risque moyen à élevé</strong>F<br>Prudence : limiter le volume, sécuriser les paiements, décider si l'on développe ou si l'on réduit l'exposition.</div>
+          <div class="mq mq-2"><strong>Valeur forte / risque élevé</strong>B (et A selon l'analyse)<br>Sécuriser : acompte, échéancier, plafond d'encours, assurance-crédit ; défendre la marge ; limiter le montant de chaque affaire.</div>
+          <div class="mq mq-3"><strong>Valeur moyenne / risque faible</strong>C, E<br>Traitement standard : process simple et efficace, relation rentable sans mobiliser trop de ressources.</div>
+          <div class="mq mq-4"><strong>Valeur forte / risque faible</strong>D (si l'on arrondit son risque vers faible)<br>Partenariat : conditions compétitives mais maîtrisées, développer volume et durée.</div>
+        </div>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span> Voir les stratégies dans chaque case. Un client faible valeur / risque élevé (absent ici) appellerait la prudence, voire le renoncement.
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <p class="res">Priorité : D, puis A et B sous conditions de sécurisation.</p>
+        <p class="conclu">On accepte une affaire risquée seulement si la valeur la justifie et si les garanties ramènent le risque à un niveau acceptable. C'est le critère E5 « le risque client / affaire est pris en compte ».</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<hr class="section-sep">
+
+<!-- ══════════════════════════════════════════════════════════
+     BLOC 3 – DÉCIDER ET NÉGOCIER
+══════════════════════════════════════════════════════════ -->
+<div class="bloc-titre" id="decider" style="margin-top:40px">
+  <span class="icone">🤝</span>
+  <h2>Bloc 3 – Utiliser le risque affaire dans la négociation</h2>
+</div>
+
+<div class="memo">
+  <div class="memo-titre">🗂 mémo négociation sécurisée</div>
+  <code>Nouveau prix = prix initial × (1 − taux de remise)</code>
+  <code>Nouvelle marge = nouveau prix − coût</code>
+  <code>Prix plancher = coût ÷ (1 − taux de marge minimal)</code>
+  <code>Remise maximale = 1 − prix plancher ÷ prix initial</code>
+  <p class="note">Leviers de sécurisation : acompte, échéancier, plafond d'encours, limitation du périmètre (phase 1 / phase 2), garantie bancaire, caution, réserve de propriété, assurance-crédit, affacturage. 3 étapes : <strong>mesurer → classer → décider</strong>.</p>
+</div>
+
+<!-- EX 12 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 12</span>
+    <span class="badge badge-2">⬆⬆ intermédiaire</span>
+    <span class="exo-titre-txt">Mini-cas A – Style Urbain : forte valeur, risque faible</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      <strong>Style Urbain</strong> – chaîne de 25 magasins de prêt-à-porter, client depuis 6 ans. CA N-1 : 320 000 € HT (environ 27 %), +40 % en 3 ans. Paie à 32 jours pour 30 jours fin de mois, aucun incident. Projet de 8 ouvertures en 3 ans.<br><br>
+      <strong>Projet :</strong> rénovation de l'éclairage de 12 magasins (LED, détecteurs de présence, variateurs) – travaux de nuit, 12 magasins en 4 mois.<br>
+      • Prix proposé : <strong>410 000 € HT</strong> – coût : <strong>305 000 € HT</strong><br>
+      • Objectif Luminotech : marge minimale de <strong>22 %</strong>, paiement standard 30 jours fin de mois<br>
+      • Demandes du client : remise de <strong>5 %</strong>, paiement à <strong>60 jours fin de mois</strong>, <strong>1 an de garantie</strong> supplémentaire offert
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez la marge et le taux de marge initiaux.</p></div>
+      <div class="question"><span class="q-num">2</span><p>La remise de 5 % est-elle acceptable ? Calculez la remise maximale compatible avec 22 %.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Proposez une contre-proposition complète (prix, paiement, garantie).</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> la marge initiale dépasse 100 000 €, soit un peu plus de 25 %. Une remise de 5 % retire environ 20 000 €.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>410 000 − 305 000 = 105 000 €</code>
+        <code>105 000 ÷ 410 000 ≈ 25,6 %</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>Avec 5 % : 410 000 × 0,95 = 389 500 € → marge 84 500 € → 84 500 ÷ 389 500 ≈ 21,7 %</code>
+        <code>Prix plancher = 305 000 ÷ 0,78 ≈ 391 026 € → remise max = 1 − 391 026 ÷ 410 000 ≈ 4,6 %</code>
+        <p class="res">5 % est refusé : la marge passerait sous 22 %.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <code>Remise 3 % : 410 000 × 0,97 = 397 700 € → marge 92 700 € → ≈ 23,3 %</code>
+        <ul>
+          <li>Paiement : refus du 60 jours ; 30 % à la commande, 40 % en cours de chantier, 30 % à la réception (45 jours maximum)</li>
+          <li>Garantie : année supplémentaire accordée en échange d'un contrat cadre de partenariat sur les futures rénovations</li>
+        </ul>
+        <p class="conclu">Affaire acceptée : la valeur du client est reconnue, la marge reste au-dessus de 22 % et la trésorerie est protégée.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 13 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 13</span>
+    <span class="badge badge-3">⬆⬆⬆ avancé</span>
+    <span class="exo-titre-txt">Mini-cas B – Technibat Services : forte valeur, risque élevé</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      <strong>Technibat Services</strong> – 280 000 € HT de CA (environ 10 %), délai réel 78 jours pour 30 jours fin de mois, 3 factures de plus de 20 000 € à plus de 60 jours de retard, mise en demeure l'an dernier. Directeur technique très favorable ; service administratif en tension de trésorerie.<br><br>
+      <strong>Projet :</strong> modernisation de l'éclairage de 4 grands immeubles tertiaires + pilotage centralisé. Site occupé, planning lié à un contrat de performance énergétique avec pénalités répercutables.<br>
+      • Prix proposé : <strong>530 000 € HT</strong> – coût : <strong>405 000 € HT</strong><br>
+      • Objectif Luminotech : marge minimale <strong>20 %</strong> ; 30 % à la commande, 40 % à mi-chantier, 30 % à la réception<br>
+      • Demandes du client : remise de <strong>8 %</strong>, règlement intégral à <strong>90 jours fin de mois</strong> après réception, <strong>suppression de l'acompte</strong>
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez la marge initiale, puis la marge avec 8 % de remise. Conclure.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Calculez la remise maximale compatible avec 20 %, puis le prix et la marge avec une remise de 4 %.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Calculez les montants d'un échéancier 30 / 40 / 30 sur le prix remisé à 4 %.</p></div>
+      <div class="question"><span class="q-num">4</span><p>Quels garde-fous ajouter ? Dans quel cas renoncer à l'affaire ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> 8 % de 530 000 €, c'est plus de 40 000 € retirés d'une marge de 125 000 €. Avec les conditions du client, Luminotech avancerait plus d'un demi-million d'euros pendant plusieurs mois.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>530 000 − 405 000 = 125 000 € → 125 000 ÷ 530 000 ≈ 23,6 %</code>
+        <code>Avec 8 % : 530 000 × 0,92 = 487 600 € → marge 82 600 € → ≈ 16,9 %</code>
+        <p class="res">Remise de 8 % refusée : marge sous le seuil de 20 %.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>Prix plancher = 405 000 ÷ 0,80 = 506 250 € → remise max ≈ 4,5 %</code>
+        <code>Remise 4 % : 530 000 × 0,96 = 508 800 € → marge 103 800 € → ≈ 20,4 %</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Échéance</th><th>Calcul</th><th>Montant HT</th></tr></thead>
+          <tbody>
+            <tr><td>Commande (30 %)</td><td>508 800 × 0,30</td><td class="val">152 640 €</td></tr>
+            <tr><td>Mi-chantier (40 %)</td><td>508 800 × 0,40</td><td class="val">203 520 €</td></tr>
+            <tr><td>Réception (30 %, 45 j max)</td><td>508 800 × 0,30</td><td class="val">152 640 €</td></tr>
+            <tr class="t-total"><td colspan="2">Total</td><td class="val">508 800 €</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span> Plafond d'encours global sur ce client, clause de suspension du chantier en cas de retard sur une échéance, étude d'une assurance-crédit ou d'un affacturage ; léger étalement possible sur la dernière échéance seulement.
+        <p class="conclu">Si le client refuse toute sécurisation, la décision raisonnable est de renoncer à l'affaire malgré sa valeur.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 14 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 14</span>
+    <span class="badge badge-3">⬆⬆⬆ avancé</span>
+    <span class="exo-titre-txt">Mini-cas C – Lumière & Design : hôtel 5 étoiles « Le Bel Horizon »</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      <strong>Lumière & Design</strong> – valeur moyenne en volume (84 000 €, 3 %), risque client faible (28 jours), fort potentiel d'image.<br><br>
+      <strong>Projet :</strong> éclairage intérieur et extérieur d'un hôtel 5 étoiles (lobby, spa, restaurant, suites, terrasse) racheté par un groupe international. Luminaires sur mesure, scénarios lumineux complexes, produits difficilement revendables, pénalités possibles en cas de retard d'ouverture.<br>
+      • Prix proposé : <strong>190 000 € HT</strong> – coût : <strong>150 000 € HT</strong><br>
+      • Objectif Luminotech : marge minimale <strong>20 %</strong> ; 40 % à la commande, 40 % à la livraison, 20 % à la réception<br>
+      • Demandes du client : remise de <strong>6 %</strong>, modifications de références <strong>sans surcoût</strong> jusqu'aux tests, acompte limité à <strong>20 %</strong>
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Calculez la marge initiale et l'effet d'une remise de 6 %.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Calculez la remise maximale compatible avec 20 %.</p></div>
+      <div class="question"><span class="q-num">3</span><p>Comparez le montant de l'acompte demandé par Luminotech et celui proposé par le client. Pourquoi l'acompte est-il déterminant ici ?</p></div>
+      <div class="question"><span class="q-num">4</span><p>Comment encadrer les modifications de références ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Ordre de grandeur :</strong> la marge initiale est d'environ 21 %, à peine au-dessus du seuil : la marge de manœuvre sur le prix est quasi nulle.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <code>190 000 − 150 000 = 40 000 € → 40 000 ÷ 190 000 ≈ 21,1 %</code>
+        <code>Avec 6 % : 190 000 × 0,94 = 178 600 € → marge 28 600 € → ≈ 16 %</code>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">2</span>
+        <code>Prix plancher = 150 000 ÷ 0,80 = 187 500 € → remise max = 1 − 187 500 ÷ 190 000 ≈ 1,3 %</code>
+        <p class="res">Éviter la remise, ou la limiter fortement et valoriser des prestations optionnelles à part.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">3</span>
+        <code>Luminotech : 190 000 × 0,40 = 76 000 €   |   client : 190 000 × 0,20 = 38 000 €</code>
+        <p class="conclu">Les produits sur mesure ne sont pas revendables : l'acompte doit couvrir les achats spécifiques engagés.</p>
+      </div>
+      <div class="corr-etape">
+        <span class="c-num">4</span> Définir précisément ce qui est inclus dans le prix, fixer une date limite au-delà de laquelle toute modification fait l'objet d'un avenant chiffré, limiter la période de changements gratuits.
+        <p class="conclu">Accepter l'affaire pour l'image, mais en préservant le prix, en sécurisant les paiements et en cadrant strictement les modifications.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 15 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 15</span>
+    <span class="badge badge-exam">🎓 sujet E5</span>
+    <span class="exo-titre-txt">Jeu de rôle – défendre la marge et sécuriser le paiement</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      En binôme, choisissez un mini-cas (A, B ou C) ou une situation de votre entreprise d'accueil.<br><br>
+      • <strong>Préparation (10 min)</strong> : analyse valeur / risque, objectif cible et ligne rouge (prix, marge, paiement), concessions possibles et refus absolus, leviers de sécurisation.<br>
+      • <strong>Simulation</strong> : fin d'entretien de négociation centrée sur la défense du prix et les conditions de paiement. On inverse ensuite les rôles.<br>
+      • <strong>Contrainte</strong> : le technico-commercial fait référence à ses contraintes internes (politique de risque, marge, plafond d'encours) sans braquer le client.
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Préparez votre fiche de négociation et jouez la scène.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Débriefing : le risque a-t-il été pris en compte ? Comment ? La solution finale reste-t-elle rentable ?</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Indice :</strong> ne jamais céder sur le prix en premier. Proposer d'abord d'autres leviers : services, phasage, modalités de paiement, engagement sur la durée.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la grille d'observation</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <table class="tableau-corr">
+          <thead><tr><th>Point observable</th><th>Attendu</th></tr></thead>
+          <tbody>
+            <tr><td>Préparation</td><td>client et projet identifiés, chiffres maîtrisés (montant, marge, délais, risque)</td></tr>
+            <tr><td>Valeur et risque</td><td>référence explicite à la place du client, à son historique de paiement, aux caractéristiques de l'affaire</td></tr>
+            <tr><td>Défense de la marge</td><td>pas de concession directe sur le prix, contreparties exigées</td></tr>
+            <tr><td>Conditions de paiement</td><td>refus des délais trop longs, acompte et échéancier obtenus surtout dans les cas à risque</td></tr>
+            <tr><td>Argumentation</td><td>refus justifiés par la valeur et le risque, pas par « la direction ne veut pas »</td></tr>
+            <tr><td>Relationnel</td><td>écoute, reformulation, contre-propositions, accord gagnant-gagnant</td></tr>
+          </tbody>
+        </table>
+        <p class="conclu">Critères E5 mobilisés : « le risque client / affaire est pris en compte » et « la prestation définie est formalisée conformément à l'accord ».</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- EX 16 -->
+<details class="exo-card">
+  <summary class="exo-header">
+    <span class="exo-num">Ex. 16</span>
+    <span class="badge badge-exam">🎓 sujet E5</span>
+    <span class="exo-titre-txt">Rédiger le paragraphe « analyse du risque » pour la fiche descriptive</span>
+    <span class="chevron">▼</span>
+  </summary>
+  <div class="exo-body">
+    <div class="contexte">
+      À partir du cas joué, rédigez un paragraphe de 8 à 10 lignes réutilisable dans votre fiche descriptive E5, en suivant la trame :<br><br>
+      1. <strong>Valeur client</strong> : CA, part dans le CA total, marge, potentiel, image<br>
+      2. <strong>Risque client</strong> : délai contractuel / délai réel, retards, incidents, encours<br>
+      3. <strong>Risque affaire</strong> : montant, niveau de personnalisation, délais, pénalités, contraintes juridiques<br>
+      4. <strong>Conclusion opérationnelle</strong> : décision (accepter, accepter sous conditions, sécuriser, limiter, refuser) et mesures retenues
+    </div>
+    <div class="questions">
+      <div class="question"><span class="q-num">1</span><p>Rédigez le paragraphe pour le client B – Technibat Services.</p></div>
+      <div class="question"><span class="q-num">2</span><p>Adaptez-le à une situation réelle de votre entreprise d'accueil.</p></div>
+    </div>
+    <div class="ordre-grandeur"><strong>Indice :</strong> chaque niveau (faible / moyen / élevé) doit être suivi d'un « car » et d'un chiffre.</div>
+    <button class="btn-corrige" onclick="toggleCorr(this)">✅ Voir la correction</button>
+    <div class="correction">
+      <div class="corr-etape">
+        <span class="c-num">1</span>
+        <p style="font-style:italic;color:#2b4535;font-size:13px;line-height:1.9;border:1px solid #cdeeda;padding:14px;border-radius:5px;background:#ffffff;">
+          Le client Technibat Services représente pour l'entreprise une valeur forte en raison de son chiffre d'affaires, de sa progression rapide et de ses perspectives sur les marchés de rénovation énergétique. Il génère un chiffre d'affaires de 280 000 €, soit environ 10 % du CA total, avec une marge d'environ 23 % sur le projet étudié, et bénéficie d'une bonne image technique.<br><br>
+          Sur le plan du risque client, les conditions de paiement sont fixées à 30 jours fin de mois, alors que le délai réel constaté est d'environ 78 jours, avec plusieurs factures à plus de 60 jours de retard et une mise en demeure récente. Le risque client est donc élevé, car la trésorerie du client est tendue et les retards sont devenus structurels.<br><br>
+          Le projet porte sur une commande de 530 000 € liée à un contrat de performance énergétique avec pénalités. Le risque affaire est élevé, car le montant engage fortement l'encours et les délais sont contraints.<br><br>
+          En conclusion, l'affaire n'est acceptable qu'avec un acompte de 30 %, un échéancier sécurisé, une remise limitée à 4 % (marge ≈ 20,4 %) et un plafond d'encours ; à défaut, il est préférable d'y renoncer.
+        </p>
+        <p class="conclu">Ce paragraphe peut être repris presque tel quel dans la fiche descriptive E5, à remettre en février.</p>
+      </div>
+    </div>
+  </div>
+</details>
+
+</main>
+
+<footer class="site-footer">
+  BTS CCST – pôle 1 « conception et commercialisation de solutions technico-commerciales » &nbsp;|&nbsp; A1.5 – C1.3 gérer le risque affaire et le risque client &nbsp;|&nbsp; 16 exercices progressifs
+</footer>
+
+<script>
+function toggleCorr(btn) {
+  const corr = btn.nextElementSibling;
+  const isVisible = corr.classList.contains('visible');
+  if (!btn.dataset.label) btn.dataset.label = btn.textContent;
+  corr.classList.toggle('visible', !isVisible);
+  btn.textContent = isVisible ? btn.dataset.label : '🔒 Masquer la correction';
+}
+</script>
+
+</body>
+</html>
